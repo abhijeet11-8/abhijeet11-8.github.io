@@ -1,5 +1,5 @@
 ---
-title: Spiking Harmonic Resonate-and-Fire SSM (SH2RFSSM)
+title: Spiking Harmonic Resonate-and-Fire SSM
 description: A second-order, fully spiking state-space model for long sequences.
 date: "May–Jul 2025"
 sortDate: "2025-07-01T00:00:00Z"
