@@ -1,84 +1,58 @@
 ---
-import { type CollectionEntry, getCollection } from "astro:content";
-import PostPreview from "@/components/blog/PostPreview.astro";
-import Note from "@/components/note/Note.astro";
+import { type CollectionEntry, getCollection, getEntry, render } from "astro:content";
 import SocialList from "@/components/SocialList.astro";
-import { getAllPosts } from "@/data/post";
 import PageLayout from "@/layouts/Base.astro";
 import { collectionDateSort } from "@/utils/date";
 
-// Posts
-const MAX_POSTS = 10;
-const allPosts = await getAllPosts();
-const allPostsByDate = allPosts.sort(collectionDateSort) as CollectionEntry<"post">[];
-const latestPosts = allPostsByDate.slice(0, MAX_POSTS);
-
-// Pinned Posts, set to a max of 3;
-const MAX_PINNED_POSTS = 3;
-const pinnedPosts = allPostsByDate
-	.values()
-	.filter((p) => p.data.pinned)
-	.take(MAX_PINNED_POSTS)
-	.toArray();
-
-// Notes, set to a max of 5
-const MAX_NOTES = 5;
-const allNotes = await getCollection("note");
-const latestNotes = allNotes
+const MAX_PROJECTS = 5;
+const home = await getEntry("page", "home");
+if (!home) throw new Error("Missing content/pages/home.md");
+const { Content } = await render(home);
+const allProjects = await getCollection("project");
+const selectedProjectIds = new Set(home.data.featuredProjects);
+const selectedPaperIds = new Set(home.data.featuredPapers);
+const latestProjects = allProjects
+	.filter((project) => selectedProjectIds.has(project.id))
 	.sort(collectionDateSort)
-	.slice(0, MAX_NOTES) as CollectionEntry<"note">[];
+	.slice(0, MAX_PROJECTS) as CollectionEntry<"project">[];
+const papers = allProjects.filter((project) => selectedPaperIds.has(project.id));
 ---
 
-<PageLayout meta={{ title: "Home" }}>
-	<section>
-		<h1 class="title mb-12">Hello World!</h1>
-		<p class="mb-4">
-			Hi, I’m a theme for Astro, a simple starter that you can use to create your website or blog.
-			If you want to know more about how you can customise me, add more posts, and make it your own,
-			click on the GitHub icon link below and it will take you to my repo.
-		</p>
-		<SocialList />
+<PageLayout meta={{ description: home.data.description ?? "", title: home.data.title }}>
+	<section class="prose prose-sm prose-cactus mb-8 max-w-none [&>h1]:mb-6">
+		<Content />
 	</section>
+	<div class="mb-30">
+		<SocialList />
+	</div>
 	{
-		pinnedPosts.length > 0 && (
-			<section class="mt-16">
-				<h2 class="title mb-6 text-xl">Pinned Posts</h2>
+		latestProjects.length > 0 && (
+			<section>
 				<ul class="space-y-4" role="list">
-					{pinnedPosts.map((p) => (
-						<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
-							<PostPreview post={p} />
+					{latestProjects.map((project) => (
+						<li class="grid gap-1 sm:grid-cols-[9rem_1fr] sm:grid-rows-[1rem_1fr] sm:gap-0">
+							<time datetime={project.data.sortDate.toISOString()}>{project.data.date}</time>
+							<a class="cactus-link" href={`/projects/${project.id}/`}>
+								{project.data.title}
+							</a>
 						</li>
 					))}
 				</ul>
 			</section>
 		)
 	}
-	<section class="mt-16">
-		<h2 class="title text-accent mb-6 text-xl"><a href="/posts/">Posts</a></h2>
-		<ul class="space-y-4" role="list">
-			{
-				latestPosts.map((p) => (
-					<li class="grid gap-1 sm:grid-cols-[auto_1fr]">
-						<PostPreview post={p} />
-					</li>
-				))
-			}
-		</ul>
-	</section>
 	{
-		latestNotes.length > 0 && (
-			<section class="mt-16">
-				<h2 class="title text-accent mb-6 text-xl">
-					<a href="/notes/">Notes</a>
-				</h2>
-				<ul class="space-y-6" role="list">
-					{latestNotes.map((note) => (
-						<li>
-							<Note note={note} as="h3" isPreview />
-						</li>
-					))}
-				</ul>
-			</section>
+		papers.length > 0 && (
+			<ul class="mt-15 list-inside list-disc space-y-2" aria-label="Publications">
+				{papers.map((paper) => (
+					<li>
+						<span>{paper.data.date}: </span>
+						<a class="cactus-link" href={`/projects/${paper.id}/`}>
+							{paper.data.title}
+						</a>
+					</li>
+				))}
+			</ul>
 		)
 	}
 </PageLayout>

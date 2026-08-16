@@ -38,11 +38,13 @@ const post = defineCollection({
 		}),
 });
 
-const note = defineCollection({
-	loader: glob({ base: "./content/notes", pattern: "**/*.{md,mdx}" }),
+const project = defineCollection({
+	loader: glob({ base: "./content/projects", pattern: "**/*.{md,mdx}" }),
 	schema: baseSchema.extend({
 		description: z.string().optional(),
-		publishDate: z.iso
+		date: z.string(),
+		pdf: z.string().optional(),
+		sortDate: z.iso
 			.datetime({ offset: true }) // Ensures ISO 8601 format with offsets allowed (e.g. "2024-01-01T00:00:00Z" and "2024-01-01T00:00:00+02:00")
 			.transform((val) => new Date(val)),
 	}),
@@ -56,4 +58,13 @@ const tag = defineCollection({
 	}),
 });
 
-export const collections = { post, note, tag };
+const page = defineCollection({
+	loader: glob({ base: "./content/pages", pattern: "**/*.{md,mdx}" }),
+	schema: baseSchema.extend({
+		description: z.string().optional(),
+		featuredPapers: z.array(z.string()).default([]),
+		featuredProjects: z.array(z.string()).default([]),
+	}),
+});
+
+export const collections = { post, project, tag, page };

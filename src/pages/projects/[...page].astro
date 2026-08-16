@@ -1,0 +1,30 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import type { GetStaticPaths, Page } from "astro";
+import Pagination from "@/components/Paginator.astro";
+import Project from "@/components/project/Project.astro";
+import PageLayout from "@/layouts/Base.astro";
+import { collectionDateSort } from "@/utils/date";
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const allProjects = await getCollection("project");
+	return paginate(allProjects.sort(collectionDateSort), { pageSize: 10 });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props as { page: Page<CollectionEntry<"project">> };
+---
+
+<PageLayout meta={{ description: "A collection of my projects", title: "Projects" }}>
+	<section>
+		<h1 class="title mb-12">Projects</h1>
+		<ul class="space-y-8 text-start">
+			{page.data.map((project) => (
+				<li><Project project={project} as="h2" isPreview /></li>
+			))}
+		</ul>
+		<Pagination
+			{...(page.url.prev && { prevUrl: { text: "← Previous Page", url: page.url.prev } })}
+			{...(page.url.next && { nextUrl: { text: "Next Page →", url: page.url.next } })}
+		/>
+	</section>
+</PageLayout>

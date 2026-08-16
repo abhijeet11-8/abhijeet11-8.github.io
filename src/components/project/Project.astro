@@ -1,0 +1,48 @@
+---
+import { type CollectionEntry, render } from "astro:content";
+import type { HTMLTag, Polymorphic } from "astro/types";
+
+type Props<Tag extends HTMLTag> = Polymorphic<{ as: Tag }> & {
+	project: CollectionEntry<"project">;
+	isPreview?: boolean | undefined;
+};
+
+const { as: Tag = "div", project, isPreview = false } = Astro.props;
+const { Content } = await render(project);
+---
+
+<article
+	class:list={[isPreview && "bg-global-text/5 inline-grid rounded-md px-4 py-3"]}
+	data-pagefind-body={isPreview ? false : true}
+>
+	<Tag class="title" class:list={{ "text-base": isPreview }}>
+		{
+			isPreview ? (
+				<a class="cactus-link" href={`/projects/${project.id}/`}>{project.data.title}</a>
+			) : (
+				<>{project.data.title}</>
+			)
+		}
+	</Tag>
+	<time datetime={project.data.sortDate.toISOString()}>{project.data.date}</time>
+	<div
+		class="prose prose-sm prose-cactus mt-4 max-w-none [&>p:last-of-type]:mb-0"
+		class:list={{ "line-clamp-6": isPreview }}
+	>
+		<Content />
+	</div>
+	{
+		!isPreview && project.data.pdf && (
+			<div class="mt-8">
+				<a class="cactus-link mb-3 inline-block" href={project.data.pdf} target="_blank" rel="noreferrer">
+					Open PDF in a new tab
+				</a>
+				<iframe
+					class="h-[85vh] min-h-[100px] w-full rounded border border-accent-2"
+					src={project.data.pdf}
+					title={`${project.data.title} PDF`}
+				></iframe>
+			</div>
+		)
+	}
+</article>
