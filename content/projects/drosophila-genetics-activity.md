@@ -3,7 +3,7 @@ title: Drosophila crosses and activity-data analysis
 description: GMR-GAL4 × UAS fly crosses and Drosophila Activity Monitor data analysis.
 date: "Research project"
 sortDate: "2024-01-01T00:00:00Z"
-pdf: "/projects/pdfs/Research_Projects/girish%20data%20analysis.pdf"
+pdf: "/pdfs/Research_Projects/girish%20data%20analysis.pdf"
 ---
 
 This project documents GMR-GAL4 × UAS TER94 fly crosses, recording phenotypes including eye and wing defects across overexpression, RNAi, and mutant lines.
