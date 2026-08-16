@@ -9,12 +9,12 @@ const home = await getEntry("page", "home");
 if (!home) throw new Error("Missing content/pages/home.md");
 const { Content } = await render(home);
 const allProjects = await getCollection("project");
-const selectedProjectIds = new Set(home.data.featuredProjects);
+const projectMap = new Map(allProjects.map((project) => [project.id, project]));
 const selectedPaperIds = new Set(home.data.featuredPapers);
-const latestProjects = allProjects
-	.filter((project) => selectedProjectIds.has(project.id))
-	.sort(collectionDateSort)
-	.slice(0, MAX_PROJECTS) as CollectionEntry<"project">[];
+const latestProjects = home.data.featuredProjects
+	.map((projectId) => projectMap.get(projectId))
+	.filter((project): project is CollectionEntry<"project"> => Boolean(project))
+	.slice(0, MAX_PROJECTS);
 const papers = allProjects.filter((project) => selectedPaperIds.has(project.id));
 ---
 
@@ -32,7 +32,13 @@ const papers = allProjects.filter((project) => selectedPaperIds.has(project.id))
 					{latestProjects.map((project) => (
 						<li class="grid gap-1 sm:grid-cols-[9rem_1fr] sm:grid-rows-[1rem_1fr] sm:gap-0">
 							<time datetime={project.data.sortDate.toISOString()}>{project.data.date}</time>
-							<a class="cactus-link" href={`/projects/${project.id}/`}>
+							<a
+								class:list={[
+									"cactus-link",
+									project.id === "facial-expression-recognition" && "text-red-600 dark:text-red-400",
+								]}
+								href={`/projects/${project.id}/`}
+							>
 								{project.data.title}
 							</a>
 						</li>
