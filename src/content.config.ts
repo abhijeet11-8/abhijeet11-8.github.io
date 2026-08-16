@@ -44,8 +44,9 @@ const project = defineCollection({
 		description: z.string().optional(),
 		date: z.string(),
 		pdf: z.string().optional(),
+		demo: z.string().optional(), // add this line
 		sortDate: z.iso
-			.datetime({ offset: true }) // Ensures ISO 8601 format with offsets allowed (e.g. "2024-01-01T00:00:00Z" and "2024-01-01T00:00:00+02:00")
+			.datetime({ offset: true })
 			.transform((val) => new Date(val)),
 	}),
 });

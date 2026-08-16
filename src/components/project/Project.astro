@@ -45,4 +45,33 @@ const { Content } = await render(project);
 			</div>
 		)
 	}
+	{
+		!isPreview && project.data.pdf && (
+			<div class="mt-8">
+				<a class="cactus-link mb-3 inline-block" href={project.data.pdf} target="_blank" rel="noreferrer">
+					Open PDF in a new tab
+				</a>
+				<iframe
+					class="h-[85vh] min-h-[100px] w-full rounded border border-accent-2"
+					src={project.data.pdf}
+					title={`${project.data.title} PDF`}
+				></iframe>
+			</div>
+		)
+	}
+	{
+		!isPreview && project.data.demo && (
+			<div class="mt-8">
+				<a class="cactus-link mb-3 inline-block" href={project.data.demo} target="_blank" rel="noreferrer">
+					Open demo in a new tab
+				</a>
+				<iframe
+					class="h-[85vh] min-h-[500px] w-full rounded border border-accent-2"
+					src={project.data.demo}
+					title={`${project.data.title} live demo`}
+					allow="camera"
+				></iframe>
+			</div>
+		)
+	}
 </article>

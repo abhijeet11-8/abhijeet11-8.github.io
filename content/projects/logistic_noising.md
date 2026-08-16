@@ -1,7 +1,7 @@
 ---
-title: Logistic noising
+title: Logistic Noising
 description: A study of deterministic chaotic dynamics for more efficient diffusion models.
-date: "Aug–Apr 2025"
+date: "Aug–Apr 2026"
 sortDate: "2025-04-01T00:00:00Z"
 pdf: "/projects/pdfs/Denoising_Logistic_Diffusion.pdf"
 ---
@@ -18,5 +18,7 @@ improve reconstruction quality. Finally, I investigate modifications
 to the loss function to further enhance performance. Experimental
 results demonstrate the effectiveness of the proposed approaches and
 highlight the trade-offs between discrete and continuous formulations.
+
+If i have to point the exact issue, it would be it’s reversal due to loss of information and symmetric nature of logistic map in contrast to noise accumalation seen in diffusion models. This attempt still provided deep insights into Non-Linear Dynamics and Generative AI. Still working on it.
 
 [Report](https://github.com/abhijeet11-8/Deterministic-Noising-Diffusion-model/blob/main/Logistic_Diffusion_Model.pdf) · [Code](https://github.com/abhijeet11-8/Logistic_Noising/tree/main)

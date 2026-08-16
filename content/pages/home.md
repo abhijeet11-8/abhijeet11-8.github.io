@@ -2,11 +2,10 @@
 title: Home
 description: The personal website of Abhijeet Vikram.
 featuredProjects:
-  - share-ssm
-  - evolutionary-biology
   - logistic_noising
-  - second-order-spiking-ssm
+  - share-ssm
   - facial-expression-recognition
+  - evolutionary-biology
 featuredPapers:
   - second-order-spiking-ssm
   - heterogeneous-harmonic-ssm
