@@ -3,8 +3,3 @@ declare module "@pagefind/default-ui" {
 		constructor(arg: unknown);
 	}
 }
-
-declare module "pdfjs-dist/build/pdf.mjs" {
-	export const getDocument: (...args: unknown[]) => any;
-	export const GlobalWorkerOptions: { workerSrc: string };
-}

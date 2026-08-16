@@ -1,6 +1,5 @@
 ---
 import PageLayout from "@/layouts/Base.astro";
-import PdfViewer from "@/components/PdfViewer.astro";
 
 const meta = {
 	description: "Curriculum vitae",
@@ -14,6 +13,12 @@ const meta = {
 			<h1 class="title">CV</h1>
 			<a class="cactus-link" href="/cv/cv.pdf" download="Abhijeet-Vikram-CV.pdf">Download PDF</a>
 		</div>
-		<PdfViewer src="/cv/view.pdf" title="Abhijeet Vikram's CV" />
+		<iframe
+			class="w-full rounded border border-accent-2"
+			height="1000"
+			src="/cv/view.pdf"
+			style="min-height: 75vh"
+			title="Abhijeet Vikram's CV"
+		></iframe>
 	</section>
 </PageLayout>

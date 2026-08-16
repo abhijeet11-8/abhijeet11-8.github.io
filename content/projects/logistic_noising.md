@@ -3,7 +3,7 @@ title: Logistic noising
 description: A study of deterministic chaotic dynamics for more efficient diffusion models.
 date: "Aug–Apr 2025"
 sortDate: "2025-04-01T00:00:00Z"
-pdf: "/pdfs/Denoising_Logistic_Diffusion.pdf"
+pdf: "/projects/pdfs/Denoising_Logistic_Diffusion.pdf"
 ---
 
 Semester project supervised by Prof. M. S. Santhanam at IISER Pune (Aug–Apr 2025). I studied how replacing stochastic noising with deterministic chaotic dynamics can make the reversal process faster and better suited to edge devices and compute-constrained environments.
