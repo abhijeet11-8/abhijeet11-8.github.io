@@ -1,5 +1,5 @@
 ---
-title: FER2013 facial-expression recognition with ResNet
+title: facial-expression recognition (ResNet)
 description: A cleaned and rebalanced FER2013 pipeline achieving 71.25% accuracy.
 date: "Jan–Apr 2025"
 sortDate: "2025-04-01T00:00:00Z"

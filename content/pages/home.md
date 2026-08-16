@@ -4,7 +4,7 @@ description: The personal website of Abhijeet Vikram.
 featuredProjects:
   - share-ssm
   - evolutionary-biology
-  - example-project
+  - logistic_noising
   - facial-expression-recognition
 featuredPapers:
   - second-order-spiking-ssm

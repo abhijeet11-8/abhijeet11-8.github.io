@@ -1,0 +1,83 @@
+---
+interface Props {
+	src: string;
+	title: string;
+}
+
+const { src, title } = Astro.props;
+---
+
+<section class="overflow-hidden rounded border border-accent-2" data-pdf-viewer data-pdf-url={src}>
+	<div class="bg-global-text/5 flex items-center justify-between gap-3 px-3 py-2">
+		<div class="flex items-center gap-2">
+			<button aria-label="Previous PDF page" class="cactus-link disabled:opacity-40" data-pdf-prev disabled type="button">←</button>
+			<span aria-live="polite" data-pdf-page>Loading PDF…</span>
+			<button aria-label="Next PDF page" class="cactus-link disabled:opacity-40" data-pdf-next disabled type="button">→</button>
+		</div>
+		<a class="cactus-link" href={src} target="_blank" rel="noreferrer">Open PDF</a>
+	</div>
+	<div class="bg-global-text/5 min-h-80 p-2" data-pdf-canvas-wrap>
+		<canvas aria-label={title} class="mx-auto block max-w-full bg-white shadow-sm" data-pdf-canvas></canvas>
+	</div>
+</section>
+
+<script>
+	import { getDocument, GlobalWorkerOptions } from "pdfjs-dist/build/pdf.mjs";
+	import workerSrc from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+
+	GlobalWorkerOptions.workerSrc = workerSrc;
+
+	for (const viewer of document.querySelectorAll<HTMLElement>("[data-pdf-viewer]")) {
+		const url = viewer.dataset.pdfUrl;
+		const canvas = viewer.querySelector<HTMLCanvasElement>("[data-pdf-canvas]");
+		const canvasWrap = viewer.querySelector<HTMLElement>("[data-pdf-canvas-wrap]");
+		const pageLabel = viewer.querySelector<HTMLElement>("[data-pdf-page]");
+		const previousButton = viewer.querySelector<HTMLButtonElement>("[data-pdf-prev]");
+		const nextButton = viewer.querySelector<HTMLButtonElement>("[data-pdf-next]");
+
+		if (!url || !canvas || !canvasWrap || !pageLabel || !previousButton || !nextButton) continue;
+
+		let currentPage = 1;
+		let pdfDocument: Awaited<ReturnType<typeof getDocument>> | undefined;
+
+		const renderPage = async () => {
+			if (!pdfDocument) return;
+			const page = await pdfDocument.getPage(currentPage);
+			const unscaledViewport = page.getViewport({ scale: 1 });
+			const scale = Math.min((canvasWrap.clientWidth - 16) / unscaledViewport.width, 2);
+			const viewport = page.getViewport({ scale });
+			const pixelRatio = window.devicePixelRatio || 1;
+			const context = canvas.getContext("2d");
+
+			if (!context) return;
+			canvas.width = Math.floor(viewport.width * pixelRatio);
+			canvas.height = Math.floor(viewport.height * pixelRatio);
+			canvas.style.width = `${viewport.width}px`;
+			canvas.style.height = `${viewport.height}px`;
+			context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+			await page.render({ canvas, canvasContext: context, viewport }).promise;
+			pageLabel.textContent = `Page ${currentPage} of ${pdfDocument.numPages}`;
+			previousButton.disabled = currentPage === 1;
+			nextButton.disabled = currentPage === pdfDocument.numPages;
+		};
+
+		previousButton.addEventListener("click", async () => {
+			if (currentPage <= 1) return;
+			currentPage -= 1;
+			await renderPage();
+		});
+		nextButton.addEventListener("click", async () => {
+			if (!pdfDocument || currentPage >= pdfDocument.numPages) return;
+			currentPage += 1;
+			await renderPage();
+		});
+
+		try {
+			pdfDocument = await getDocument(url).promise;
+			await renderPage();
+			new ResizeObserver(() => void renderPage()).observe(canvasWrap);
+		} catch {
+			pageLabel.textContent = "Unable to display PDF.";
+		}
+	}
+</script>
