@@ -2,7 +2,6 @@
 import { type CollectionEntry, getCollection, getEntry, render } from "astro:content";
 import SocialList from "@/components/SocialList.astro";
 import PageLayout from "@/layouts/Base.astro";
-import { collectionDateSort } from "@/utils/date";
 
 const MAX_PROJECTS = 5;
 const home = await getEntry("page", "home");
