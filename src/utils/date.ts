@@ -1,4 +1,3 @@
-import type { CollectionEntry } from "astro:content";
 import { siteConfig } from "@/site.config";
 
 export function getFormattedDate(
@@ -15,11 +14,18 @@ export function getFormattedDate(
 	}).format(date);
 }
 
-export function collectionDateSort(
-	a: CollectionEntry<"post" | "project">,
-	b: CollectionEntry<"post" | "project">,
-) {
-	const aDate = "publishDate" in a.data ? a.data.publishDate : a.data.sortDate;
-	const bDate = "publishDate" in b.data ? b.data.publishDate : b.data.sortDate;
+type SortableContentEntry = {
+	data: {
+		publishDate?: Date;
+		sortDate?: Date;
+	};
+};
+
+export function collectionDateSort(a: SortableContentEntry, b: SortableContentEntry) {
+	const aDate = a.data.publishDate ?? a.data.sortDate;
+	const bDate = b.data.publishDate ?? b.data.sortDate;
+	if (!aDate || !bDate) {
+		return 0;
+	}
 	return bDate.getTime() - aDate.getTime();
 }
