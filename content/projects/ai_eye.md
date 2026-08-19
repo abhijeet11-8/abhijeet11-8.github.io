@@ -1,9 +1,10 @@
 ---
-title: AI Eye (another Wrapper)
+title: AI Eye
 description: Spatial-kernel standardisation, activity-data analysis, and a larvae activity tracker.
-date: "Jun–Jul 2025"
+date: "Mar-Apr 2026"
 sortDate: "2025-07-01T00:00:00Z"
 ---
+**#vibe coded** **#wrapper**
 
 AI Eye is a macOS AI overlay that lets you chat, code, and give access to whatever's on screen to personal assistant AI models from one floating panel. Completely Free! and Unlimited! token limit. Helpful for studies and coding tasks.
 Can also use Ollama AI models locally but makes PC slow, suggested to use the API keys.
