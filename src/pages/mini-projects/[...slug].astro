@@ -1,0 +1,61 @@
+---
+import { render } from "astro:content";
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
+import { getCollection } from "astro:content";
+import PageLayout from "@/layouts/Base.astro";
+
+export const getStaticPaths = (async () => {
+	const entries = await getCollection("miniProject");
+	return entries.map((entry) => ({
+		params: { slug: entry.id },
+		props: { entry },
+	}));
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { entry } = Astro.props as Props;
+const { Content } = await render(entry);
+---
+
+<PageLayout meta={{
+	description: entry.data.description ?? "",
+	title: entry.data.title,
+}}>
+	<article class="prose prose-sm prose-cactus max-w-none" data-pagefind-body>
+		<h1 class="title mb-4">{entry.data.title}</h1>
+		<time datetime={entry.data.sortDate.toISOString()}>{entry.data.date}</time>
+		<div class="mt-8">
+			<Content />
+		</div>
+		{
+			entry.data.pdf && (
+				<div class="mt-8">
+					<a class="cactus-link mb-3 inline-block" href={entry.data.pdf} target="_blank" rel="noreferrer">
+						Open PDF in a new tab
+					</a>
+					<iframe
+						class="h-[85vh] min-h-[100px] w-full rounded border border-accent-2"
+						src={entry.data.pdf}
+						title={`${entry.data.title} PDF`}
+					></iframe>
+				</div>
+			)
+		}
+		{
+			entry.data.demo && (
+				<div class="mt-8">
+					<a class="cactus-link mb-3 inline-block" href={entry.data.demo} target="_blank" rel="noreferrer">
+						Open demo in a new tab
+					</a>
+					<iframe
+						class="h-[85vh] min-h-[500px] w-full rounded border border-accent-2"
+						src={entry.data.demo}
+						title={`${entry.data.title} live demo`}
+						allow="camera"
+					></iframe>
+				</div>
+			)
+		}
+	</article>
+</PageLayout>

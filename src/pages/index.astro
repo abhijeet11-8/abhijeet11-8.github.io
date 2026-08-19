@@ -9,7 +9,8 @@ if (!home) throw new Error("Missing content/pages/home.md");
 const { Content } = await render(home);
 const allProjects = await getCollection("project");
 const projectMap = new Map(allProjects.map((project) => [project.id, project]));
-const selectedPaperIds = new Set(home.data.featuredPapers);
+const selectedPaperIds = new Set(home.data.featuredPapers ?? []);
+const highlightedProjectIds = new Set(home.data.highlightedProjects ?? []);
 const latestProjects = home.data.featuredProjects
 	.map((projectId) => projectMap.get(projectId))
 	.filter((project): project is CollectionEntry<"project"> => Boolean(project))
@@ -24,6 +25,12 @@ const papers = allProjects.filter((project) => selectedPaperIds.has(project.id))
 	<div class="mb-30">
 		<SocialList />
 	</div>
+	<div class="mb-6 flex justify-end">
+		<a class="cactus-link inline-flex items-center gap-2" href="/mini-projects/">
+			<span>Mini-projects</span>
+			<span aria-hidden="true">→</span>
+		</a>
+	</div>
 	{
 		latestProjects.length > 0 && (
 			<section>
@@ -34,7 +41,7 @@ const papers = allProjects.filter((project) => selectedPaperIds.has(project.id))
 							<a
 								class:list={[
 									"cactus-link",
-									project.id === "facial-expression-recognition" && "text-red-600 dark:text-red-400",
+									highlightedProjectIds.has(project.id) && "theme-inline-accent",
 								]}
 								href={`/projects/${project.id}/`}
 							>

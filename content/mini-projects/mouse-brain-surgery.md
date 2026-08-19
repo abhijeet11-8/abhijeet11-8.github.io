@@ -1,5 +1,5 @@
 ---
-title: Mouse blood perfusion and brain extraction
+title: Mouse Brain surgery and Extraction
 description: Neurobiological methods for tissue fixation and brain extraction.
 date: "Research project"
 sortDate: "2024-01-01T00:00:00Z"

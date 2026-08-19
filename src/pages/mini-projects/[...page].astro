@@ -1,0 +1,54 @@
+---
+import { type CollectionEntry, getCollection, getEntry, render } from "astro:content";
+import type { GetStaticPaths, Page } from "astro";
+import PageLayout from "@/layouts/Base.astro";
+import { collectionDateSort } from "@/utils/date";
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const allMiniProjects = await getCollection("miniProject");
+	const miniPage = await getEntry("page", "mini-projects");
+	const customOrder = miniPage?.data.featuredMiniProjects?.length
+		? miniPage.data.featuredMiniProjects
+		: miniPage?.data.featuredProjects ?? [];
+	const projectMap = new Map(allMiniProjects.map((project) => [project.id, project]));
+	const orderedMiniProjects = customOrder.length
+		? customOrder
+			.map((projectId) => projectMap.get(projectId))
+			.filter((project): project is CollectionEntry<"miniProject"> => Boolean(project))
+			.concat(allMiniProjects.filter((project) => !customOrder.includes(project.id)))
+		: allMiniProjects;
+	return paginate(orderedMiniProjects, { pageSize: 10 });
+}) satisfies GetStaticPaths;
+
+const miniPage = await getEntry("page", "mini-projects");
+if (!miniPage) throw new Error("Missing content/pages/mini-projects.md");
+const { Content } = await render(miniPage);
+const { page } = Astro.props as { page: Page<CollectionEntry<"miniProject">> };
+const highlightedProjectIds = new Set(miniPage.data.highlightedProjects ?? []);
+---
+
+<PageLayout meta={{ description: miniPage.data.description ?? "A collection of mini-projects", title: miniPage.data.title ?? "Mini-projects" }}>
+	<section class="prose prose-sm prose-cactus mb-8 max-w-none [&>h1]:mb-6">
+		<Content />
+	</section>
+	<section>
+		<h1 class="title mb-8">Mini-projects</h1>
+		{page.data.length > 0 ? (
+			<ul class="space-y-4 text-start">
+				{page.data.map((project) => (
+					<li class="pb-1 last:border-0">
+						<a
+							class:list={["cactus-link", highlightedProjectIds.has(project.id) && "theme-inline-accent"]}
+							href={`/mini-projects/${project.id}/`}
+						>
+							{project.data.title}
+						</a>
+						<p class="mt-1 text-sm text-muted">{project.data.description ?? "Mini-project"}</p>
+					</li>
+				))}
+			</ul>
+		) : (
+			<p class="text-muted">Nothing here yet!</p>
+		)}
+	</section>
+</PageLayout>

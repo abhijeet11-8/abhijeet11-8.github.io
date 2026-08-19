@@ -123,6 +123,14 @@
 		@apply hover:decoration-link underline underline-offset-2 hover:decoration-2;
 	}
 
+	.theme-inline-accent {
+		color: oklch(55.27% 0.195 19.06);
+	}
+
+	html[data-theme="dark"] .theme-inline-accent {
+		color: oklch(70.91% 0.1415 163.7);
+	}
+
 	.title {
 		@apply text-accent-2 text-2xl font-semibold;
 	}

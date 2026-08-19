@@ -1,0 +1,31 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import type { GetStaticPaths, Page } from "astro";
+import PageLayout from "@/layouts/Base.astro";
+import { collectionDateSort } from "@/utils/date";
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const allBlogs = await getCollection("blog");
+	return paginate(allBlogs.sort(collectionDateSort), { pageSize: 10 });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props as { page: Page<CollectionEntry<"blog">> };
+---
+
+<PageLayout meta={{ description: "A collection of blog posts", title: "Blog" }}>
+	<section>
+		<h1 class="title mb-8">Blog</h1>
+		{page.data.length > 0 ? (
+			<ul class="space-y-4 text-start">
+				{page.data.map((post) => (
+					<li class="border-b border-dashed border-muted pb-3 last:border-0">
+						<a class="cactus-link" href={`/blog/${post.id}/`}>{post.data.title}</a>
+						<p class="mt-1 text-sm text-muted">{post.data.description ?? "Blog post"}</p>
+					</li>
+				))}
+			</ul>
+		) : (
+			<p class="text-muted">Nothing here yet!</p>
+		)}
+	</section>
+</PageLayout>

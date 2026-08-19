@@ -1,5 +1,5 @@
 ---
-title: Nonlinear earthquake location determination
+title: Earthquake location determination
 description: A review of inverse methods for estimating an earthquake hypocentre and origin time.
 date: "Research project"
 sortDate: "2024-01-01T00:00:00Z"

@@ -44,7 +44,31 @@ const project = defineCollection({
 		description: z.string().optional(),
 		date: z.string(),
 		pdf: z.string().optional(),
-		demo: z.string().optional(), // add this line
+		demo: z.string().optional(),
+		sortDate: z.iso
+			.datetime({ offset: true })
+			.transform((val) => new Date(val)),
+	}),
+});
+
+const blog = defineCollection({
+	loader: glob({ base: "./content/blog", pattern: "**/*.{md,mdx}" }),
+	schema: baseSchema.extend({
+		description: z.string().optional(),
+		date: z.string(),
+		sortDate: z.iso
+			.datetime({ offset: true })
+			.transform((val) => new Date(val)),
+	}),
+});
+
+const miniProject = defineCollection({
+	loader: glob({ base: "./content/mini-projects", pattern: "**/*.{md,mdx}" }),
+	schema: baseSchema.extend({
+		description: z.string().optional(),
+		date: z.string(),
+		pdf: z.string().optional(),
+		demo: z.string().optional(),
 		sortDate: z.iso
 			.datetime({ offset: true })
 			.transform((val) => new Date(val)),
@@ -65,7 +89,9 @@ const page = defineCollection({
 		description: z.string().optional(),
 		featuredPapers: z.array(z.string()).default([]),
 		featuredProjects: z.array(z.string()).default([]),
+		featuredMiniProjects: z.array(z.string()).default([]),
+		highlightedProjects: z.array(z.string()).default([]),
 	}),
 });
 
-export const collections = { post, project, tag, page };
+export const collections = { post, project, blog, miniProject, tag, page };
