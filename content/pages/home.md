@@ -6,6 +6,7 @@ featuredProjects:
   - share-ssm
   - facial-expression-recognition
   - evolutionary-biology
+  - ai_eye
 highlightedProjects:
   - facial-expression-recognition
 featuredPapers:
