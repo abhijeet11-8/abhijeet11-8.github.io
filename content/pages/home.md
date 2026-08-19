@@ -1,6 +1,6 @@
 ---
 title: Home
-description: The personal website of Abhijeet Vikram.
+description: Abhijeet Vikram
 featuredProjects:
   - logistic_noising
   - share-ssm
